@@ -2,26 +2,137 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+.startcon {
+  background-image: url('/bgggg2.png');
+  background-size: "cover";
+  background-position: "center";
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.des1 {
+  font-size: 5.5rem;
+  font-weight: 600;
+  margin-left: 14rem;
+  color: white;
+  text-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
+.logo {
+  padding: 15px;
+  width: 6rem;
+  border-radius: 50%;
+}
+
+.losub {
+  display: grid;
+  grid-template-columns: 6rem auto;
+}
+
+.Numer {
+  font-size: 4.5rem;
+  font-weight: 600;
+  margin-left: 1rem;
+}
+
+.Numer .me {
+  margin-top: 3rem;
+  margin-left: 3rem;
+  color: #FF4F4F;
+}
+
+.button-81 {
+  margin-left: 8rem;
+  margin-top: 3rem;
+  background-color: #fff;
+  border: 0 solid #ffffff;
+  border-radius: 1.5rem;
+  box-sizing: border-box;
+  color: #0d172a;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Basier circle", -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 1rem 1.6rem;
+  text-align: center;
+  text-decoration: none #0d172a solid;
+  text-decoration-thickness: auto;
+  transition: all .1s cubic-bezier(.4, 0, .2, 1);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-81:hover {
+  background-color: #FF4F4F;
+  color: #fff;
+}
+
+@media (min-width: 768px) {
+  .button-81 {
+      font-size: 1.125rem;
+      padding: 1rem 2rem;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+.navbarcon{
+  display: grid;
+  grid-column: auto auto auto auto;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+.calculatebutton{
+  background-color: #fff;
+  border: 0 solid #ffffff;
+  border-radius: .5rem;
+  box-sizing: border-box;
+  color: #0d172a;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1rem;
+  line-height: 0;
+  padding: 1rem 1.6rem;
+  text-align: center;
+  text-decoration: none #000000;
+  transition: all .1s cubic-bezier(.4, 0, .2, 1);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.calculatebutton:hover {
+  background-color: #FF4F4F;
+  color: #fff;
+}
+
+@media (min-width: 768px) {
+  .calculatebutton {
+      font-size: 1.125rem;
+      padding: 1rem 2rem;
   }
+}
+
+.tablebisec {
+  width: 100%;
+  margin-left: 5%;
+  border-collapse: collapse;
+  width: 90%;
+  background-color: #fff;
+  margin-top: 1%;
+}
+
+.tablebisec th, .tablebisec td {
+  padding: 10px;
+  text-align: center;
+}
+
+.tablebisec th{
+  background-color: #FF4F4F;
+  color: #ffffff;
+}
+
+.tablebisec tr:nth-child(even) {
+  background-color: #f3f3f3;
 }
