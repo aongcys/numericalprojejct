@@ -1,6 +1,7 @@
 import { evaluate } from 'mathjs'
 import React from 'react'
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import axios from 'axios';
 import NavBarRoot from '@/components/Navbarroot'
 import FlooTer from '@/components/flooter'
 import { MathJax } from 'better-react-mathjax'
@@ -16,6 +17,17 @@ const Falsep = () => {
     const [Equation, setEquation] = useState("");
     const [errorvalue, seterrorvalue] = useState(0.000001);
     const [answer, setanswer] = useState(0);
+    const [checkidfunc, setcheckidfunc] = useState([]);
+
+    useEffect(() => {
+        axios.get('http://localhost:4002/getrootfunc')
+            .then((response) => {
+                setcheckidfunc(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+            });
+    }, []);
 
     const inputEquation = (event) => {
         setEquation(event.target.value);
@@ -31,6 +43,18 @@ const Falsep = () => {
 
     const inputerrorvalue = (event) => {
         seterrorvalue(parseFloat(event.target.value));
+    }
+
+    const Random = () => {
+        let randomid = Math.floor(Math.random() * 6) + 1;
+        console.log(randomid);
+
+        const selectfunction = checkidfunc.find(item => item.id == randomid);
+        if (selectfunction) {
+            setEquation(selectfunction.function);
+        } else {
+            console.log("Ha mai jer Kub");
+        }
     }
 
     var Max = 999;
@@ -50,13 +74,13 @@ const Falsep = () => {
             intable.push({
                 Iteration: iteration,
                 Xm: xm,
-                Y:fxm,
+                Y: fxm,
                 Error: error
             });
 
             const fxr = evaluateFunc(xr);
             const fxl = evaluateFunc(xl);
-            
+
 
             xm = ((xl * fxr) - (xr * fxl)) / (fxr - fxl);
 
@@ -119,8 +143,8 @@ const Falsep = () => {
                         <div className='grid grid-rows-3'>
                             <div className='row-span-1'>
                                 <div className='mt-5 mr-20 h-[75%] bg-white rounded-box flex justify-center items-center shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]'>
-                                <MathJax className='text-[1.5rem]' inline dynamic>
-                                        {"`f(x): $`".replace("$", Equation ? Equation : "" )}
+                                    <MathJax className='text-[1.5rem]' inline dynamic>
+                                        {"`f(x): $`".replace("$", Equation ? Equation : "")}
                                     </MathJax>
                                 </div>
                             </div>
@@ -140,13 +164,14 @@ const Falsep = () => {
                                             <input type="number" value={errorvalue} onChange={inputerrorvalue} placeholder="0.000001" className="input input-bordered w-[80%] max-w-xs" />
                                         </div>
                                     </div>
-                                    <div className='grid grid-cols-3 ml-[4%]'>
+                                    <div className='flex flex-row ml-[4%] gap-[1rem]'>
                                         <div className='col-span-2'>
                                             <p>Equation</p>
-                                            <input type="text" value={Equation} onChange={inputEquation} placeholder="x^2 - 7" className="input input-bordered w-[100%] max-w-[26rem]" />
+                                            <input type="text" value={Equation} onChange={inputEquation} placeholder="x^2 - 7" className="input input-bordered w-[20rem]" />
                                         </div>
-                                        <div>
-                                            <button className="calculatebutton btn mt-6 w-[80%] text-[1rem] text-white" onClick={() => Falseposition(xl, xr, errorvalue)}>Calculate</button>
+                                        <div className='flex flex-row gap-[1rem]'>
+                                            <button className="calculatebutton btn mt-6 w-[9rem] text-[1rem] text-white " onClick={() => Falseposition(xl, xr, errorvalue)}>Calculate</button>
+                                            <button className="calculatebutton btn mt-6 w-[9rem] text-[1rem] text-white" onClick={() => Random()}>Random</button>
                                         </div>
                                     </div>
                                 </div>

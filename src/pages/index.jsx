@@ -19,7 +19,7 @@ function Home() {
             <div className="ChoinceS">
               <Link href="/root/graphicalmethod">
                 <button className="button-81">
-                  Continue  
+                  Continue
                 </button>
               </Link>
             </div>

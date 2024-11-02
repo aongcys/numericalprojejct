@@ -1,6 +1,6 @@
 import { evaluate, det } from 'mathjs'; // ลบ replace ออกจากการนำเข้า
 import React, { useState } from 'react';
-import FlooTer from '/src/components/Flooter';
+import FlooTer from '/src/components/flooter';
 import Link from 'next/link';
 import NavBarLinear from '@/components/Navbarlinear';
 
@@ -133,16 +133,16 @@ const Gusseli = () => {
                         <div className='grid grid-flow-col mt-3 gap-4'>
                             <div>
                                 <label className='block mb-2'>Matrix Size (NxN)</label>
-                                <input 
-                                    type="number" 
-                                    placeholder="Input Size" 
-                                    value={size} 
-                                    onChange={inputSize} 
-                                    className="input input-bordered w-full max-w-xs" 
+                                <input
+                                    type="number"
+                                    placeholder="Input Size"
+                                    value={size}
+                                    onChange={inputSize}
+                                    className="input input-bordered w-full max-w-xs"
                                 />
                             </div>
-                            <button 
-                                className="calculatebutton btn mt-8 w-full text-[1rem] text-white bg-red-500 hover:bg-red-600" 
+                            <button
+                                className="calculatebutton btn mt-8 w-full text-[1rem] text-white bg-red-500 hover:bg-red-600"
                                 onClick={calculateGaussianElimination}
                             >
                                 Calculate Gaussian Elimination

@@ -4,14 +4,13 @@ import FlooTer from '/src/components/flooter';
 import Link from 'next/link';
 import { MathJax } from 'better-react-mathjax'
 import NavBarinter from '@/components/Navbarinterpolation';
-import { Checkbox } from '@mui/material';
 
-const NewtonDi = () => {
+const Splinear = () => {
     const [size, setSize] = useState(2);
     const [xvalue, setxvalue] = useState(0);
-    const [matrixY, setmatrixY] = useState(Array(size).fill(0));
-    const [matrixX, setmatrixX] = useState(Array(size).fill(0));
-    const [check, setcheck] = useState([]);
+    const [matrixY, setmatrixY] = useState(Array(2).fill(0));
+    const [matrixX, setmatrixX] = useState(Array(2).fill(0));
+    const [matrixM, setmatrixM] = useState(Array(2).fill(0));
     const [data, setdata] = useState(null);
     const [checkidfunc, setcheckidfunc] = useState([]);
 
@@ -30,7 +29,6 @@ const NewtonDi = () => {
         setSize(newSize);
         setmatrixY(Array(newSize).fill(0));
         setmatrixX(Array(newSize).fill(0));
-        setcheck(Array(newSize).fill(false));
     };
 
     const inputX = (event) => {
@@ -47,12 +45,6 @@ const NewtonDi = () => {
         const newMatrixX = [...matrixX];
         newMatrixX[row] = parseFloat(value);
         setmatrixX(newMatrixX);
-    };
-
-    const SelectXY = (rowIndex) => {
-        const updatedSelection = [...check];
-        updatedSelection[rowIndex] = !updatedSelection[rowIndex];
-        setcheck(updatedSelection);
     };
 
     const Randomfunc = () => {
@@ -74,7 +66,6 @@ const NewtonDi = () => {
             setmatrixY(yarray);
 
             setSize(xarray.length);
-            setcheck(Array(xarray.length).fill(false));
 
             console.log("Final matrixX:", xarray);
             console.log("Final matrixY:", yarray);
@@ -84,47 +75,30 @@ const NewtonDi = () => {
     };
 
 
-    console.log(check);
-
-    const includedX = matrixX.filter((_, index) => check[index]).map(value => parseFloat(value));
-    const includedY = matrixY.filter((_, index) => check[index]).map(value => parseFloat(value));
-
     const calculatenewtondevide = () => {
-
-        // const loop = includedX.length;
-        // console.log(includedX.length)
-        // const findC = Array.from({ length: loop }, () => Array(loop).fill(0));
-
-        // for (let i = 0; i < loop; i++) {
-        //     findC[i][0] = includedY[i];
-        //     console.log(findC[i][0])
-        // }
-
-        const loopsize = includedX.length;
-        console.log(includedX.length)
-        const findC = Array.from({ length: loopsize }, () => Array(loopsize).fill(0));
-
-        for (let i = 0; i < loopsize; i++) {
-            findC[i][0] = includedY[i];
-            console.log(findC[i][0]);
+        // console.log(matrixM.length);
+        let mchoose = 0;
+        for (let i = 0; i < size - 1; i++) {
+            matrixM[i] = (matrixY[i + 1] - matrixY[i]) / (matrixX[i + 1] - matrixX[i]);
+            console.log(matrixM[i])
         }
 
-        for (let i = 1; i < loopsize; i++) { // เรื่มจาก 1 ได้เลย เพราะว่า c0 จะเท่ากับ y0 อยู่แล้ว (y=fx)
-            for (let j = 0; j < loopsize - i; j++) {
-                findC[j][i] = (findC[j + 1][i - 1] - findC[j][i - 1]) / (includedX[j + i] - includedX[j]);
-                console.log(findC[j][i])
+        let result = 0;
+
+        for (let i = 0; i < size - 1; i++) {
+            if (xvalue >= matrixX[i] && xvalue <= matrixX[i + 1]) {
+                mchoose = matrixM[i];
+                result = matrixY[i] + mchoose * (xvalue - matrixX[i]);
+                // console.log(mchoose)
             }
         }
 
-        let term = 1;
-        let result = findC[0][0];
-
-        for (let i = 1; i < loopsize; i++) { //การบวกแต่ละ term
-            term *= (xvalue - includedX[i - 1]);
-            result += findC[0][i] * term;
+        if (isNaN(result)) {
+            alert("Please check All input values");
+            return;
         }
 
-        setdata(result);
+        setdata(result.toFixed(6));
     };
 
     return (
@@ -133,14 +107,14 @@ const NewtonDi = () => {
                 <NavBarinter></NavBarinter>
                 <div className='mt-5 h-[5rem] flex flex-col items-center justify-center pb-[2%]'>
                     <ul className="classmenu menu menu-lg bg-white rounded-box w-[95%] shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] flex flex-row gap-2">
-                        <li className='hover:bg-red-500 rounded-box bg-red-500 text-white w-[32.5%] flex flex-row items-center justify-center'>
+                        <li className='hover:bg-red-500 rounded-box w-[32.5%] flex flex-row items-center justify-center'>
                             <Link href="/interpolation/newtondivided" className='w-[100%] flex flex-row items-center justify-center'>Newton's Divided Difference</Link>
                         </li>
                         <li className='hover:bg-red-400  rounded-box w-[32.5%] flex flex-row items-center justify-center'>
                             <Link href="/interpolation/lagrangeinter" className='w-[100%] flex flex-row items-center justify-center'>Lagrange Interpolation</Link>
                         </li>
-                        <li className='hover:bg-red-400 rounded-box w-[32.5%]  flex flex-row items-center justify-center'>
-                            <Link href="/interpolation/splinelenear" className='w-[100%] flex flex-row items-center justify-center'>Spline interpolation</Link>
+                        <li className='hover:bg-red-400 rounded-box w-[32.5%]  bg-red-500 text-white flex flex-row items-center justify-center'>
+                            <Link href="/interpolation/splinelenearo" className='w-[100%] flex flex-row items-center justify-center'>Spline interpolation</Link>
                         </li>
                     </ul>
                 </div>
@@ -156,7 +130,7 @@ const NewtonDi = () => {
                                     <p>find X</p>
                                     <input type="number" placeholder="Input X" onChange={inputX} className="input input-bordered w-[10rem]" />
                                 </div>
-                                <button className="calculatebutton btn mt-[1.35rem] w-[10rem] text-[1rem] text-white" onClick={calculatenewtondevide}>Calculate</button>
+                                <button className="calculatebutton btn mt-[1.35rem] w-[30%] text-[1rem] text-white" onClick={calculatenewtondevide}>Calculate</button>
                                 <button className="calculatebutton btn mt-[1.35rem] w-[10rem] text-[1rem] text-white" onClick={Randomfunc}>Random</button>
                             </div>
                             <hr className='border-red-400 w-[80%] mt-[3%] opacity-100 mb-[2%]' />
@@ -165,9 +139,8 @@ const NewtonDi = () => {
                                     <h3>X Value</h3>
                                     <div>
                                         <div>
-                                            {Array.isArray(matrixX) && matrixX.map((value, rowIndex) => (
+                                            {matrixX.map((value, rowIndex) => (
                                                 <div key={rowIndex} className="flex flex-row items-center justify-center">
-                                                    <Checkbox checked={check[rowIndex]} onChange={() => SelectXY(rowIndex)} />
                                                     <input
                                                         type="number"
                                                         value={matrixX[rowIndex]}
@@ -182,7 +155,7 @@ const NewtonDi = () => {
                                 <div className='flex flex-col items-center'>
                                     <h3>Y Value (fx)</h3>
                                     <div>
-                                        {Array.isArray(matrixY) && matrixY.map((value, rowIndex) => (
+                                        {matrixY.map((value, rowIndex) => (
                                             <div key={rowIndex} className="flex flex-row items-center justify-center">
                                                 <input
                                                     type="number"
@@ -215,4 +188,4 @@ const NewtonDi = () => {
     );
 }
 
-export default NewtonDi;
+export default Splinear

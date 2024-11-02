@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 
-function NavBarinter() {
+function NavBardiff() {
   return (
     <>
       <div>
@@ -12,7 +12,7 @@ function NavBarinter() {
           </div>
           <div className="flex col-span-2">
             <div className="dropdown dropdown-hover ml-[13rem]">
-              <div tabIndex={0} role="button" className="btn bg-white h-[3.5rem] m-5 text-lg py-3 px-10 text-[2.5rem] font-normal w-[25rem]" >Interpolation</div>
+              <div tabIndex={0} role="button" className="btn bg-white h-[3.5rem] m-5 text-lg py-3 px-10 text-[2.5rem] font-normal w-[25rem]" >Integration & Differentiation</div>
               <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-[27rem] p-3 shadow text-lg">
                 <li><Link href="/root/graphicalmethod">Root of Equation</Link></li>
                 <li><Link href="/linear/cramersrule">Linear Algebra Equeation</Link></li>
@@ -31,4 +31,4 @@ function NavBarinter() {
   )
 }
 
-export default NavBarinter
+export default NavBardiff

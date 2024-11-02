@@ -1,16 +1,91 @@
-import { evaluate, Matrix, det, replace } from 'mathjs';
 import { MathJax } from 'better-react-mathjax';
-import React, { useState } from 'react';
-import FlooTer from '/src/components/Flooter';
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import FlooTer from '/src/components/flooter';
 import Link from 'next/link';
 import NavBarLinear from '@/components/Navbarlinear';
 
 const Gusseli = () => {
     const [size, setSize] = useState(2);
-    const [matrixA, setMatrixA] = useState(Array(2).fill().map(() => Array(2).fill(0)));
-    const [matrixB, setMatrixB] = useState(Array(2).fill(0));
-    const [matrixX, setMatrixX] = useState(Array(2).fill(0));
+    const [matrixA, setMatrixA] = useState(Array(size).fill().map(() => Array(2).fill(0)));
+    const [matrixB, setMatrixB] = useState(Array(size).fill(0));
+    const [matrixX, setMatrixX] = useState(Array(size).fill(0));
     const [data, setdata] = useState([]);
+    const [checkidfunc, setcheckidfunc] = useState([]);
+
+    useEffect(() => {
+        axios.get('http://localhost:4002/getmatrixequeation')
+            .then((response) => {
+                setcheckidfunc(response.data);
+                console.log("Check ID Function Data:", response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+            });
+    }, []);
+
+    const Random = () => {
+        const randomid = Math.floor(Math.random() * 2) + 1;
+        const selectfunction = checkidfunc.find(item => item.id === randomid);
+
+        console.log("checkidfunc:", checkidfunc); // แสดงข้อมูลของ checkidfunc
+        console.log("Selected Function:", selectfunction); // แสดง selectfunction ที่ถูกเลือก
+
+        if (selectfunction) {
+            // ตรวจสอบค่า avlaue และ value
+            const cleanedMatrixString = selectfunction.avlaue ? selectfunction.avlaue.replace(/(^"|"$)/g, '') : null;
+            const cleanedConstantsString = selectfunction.value ? selectfunction.value.replace(/(^"|"$)/g, '') : null;
+
+            console.log("Cleaned Matrix String:", cleanedMatrixString);
+            console.log("Cleaned Constants String:", cleanedConstantsString);
+
+            // ตรวจสอบว่าค่าทั้งสองไม่ใช่ null และมีความยาวมากกว่า 0
+            if (cleanedMatrixString && cleanedConstantsString) {
+                console.log("Before parsing:");
+                console.log("Cleaned Matrix String:", cleanedMatrixString);
+                console.log("Cleaned Constants String:", cleanedConstantsString);
+
+                // ตรวจสอบความยาวก่อน parsing
+                if (cleanedMatrixString.length > 0 && cleanedConstantsString.length > 0) {
+                    try {
+                        // Parse ค่าเป็น array
+                        const parsedMatrix = JSON.parse(cleanedMatrixString);
+                        const parsedConstants = JSON.parse(cleanedConstantsString);
+
+                        console.log("After parsing:");
+                        console.log("Parsed Matrix:", parsedMatrix);
+                        console.log("Parsed Constants:", parsedConstants);
+
+                        // ตรวจสอบว่า parsedMatrix และ parsedConstants เป็น array และมีขนาดที่ถูกต้อง
+                        if (Array.isArray(parsedMatrix) && Array.isArray(parsedConstants)) {
+                            const matrixSize = parsedMatrix.length;
+
+                            // ตรวจสอบขนาดของ matrix กับ constants
+                            if (matrixSize === parsedConstants.length) {
+                                setSize(matrixSize);
+                                setMatrixA(parsedMatrix);
+                                setMatrixB(parsedConstants);
+                                console.log("Random Matrix A:", parsedMatrix);
+                                console.log("Random Constants B:", parsedConstants);
+                            } else {
+                                console.error("Matrix size does not match constants size:", matrixSize, parsedConstants.length);
+                            }
+                        } else {
+                            console.error("Parsed matrix or constants are not arrays", parsedMatrix, parsedConstants);
+                        }
+                    } catch (error) {
+                        console.error("Error parsing matrix or constants", error);
+                    }
+                } else {
+                    console.error("Matrix or constants strings are empty");
+                }
+            } else {
+                console.error("Matrix or constants strings are empty or undefined");
+            }
+        } else {
+            console.log("No function found for random id:", randomid);
+        }
+    };
 
     const inputSize = (event) => {
         const newSize = parseInt(event.target.value);
@@ -82,11 +157,11 @@ const Gusseli = () => {
             <div className='h-auto bg-stone-200 pb-[10%]'>
                 <NavBarLinear />
                 <div className='mt-5 h-[5rem] flex flex-col items-center justify-center pb-[2%]'>
-                    <ul className="classmenu menu menu-lg bg-white rounded-box w-[95%] gap-[0.5%] shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] grid grid-flow-col">
-                        <li className='hover:bg-red-500 rounded-box'>
+                    <ul className="classmenu menu menu-lg bg-white rounded-box w-[90%] gap-[0.5%] shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] grid grid-flow-col">
+                        <li className='hover:bg-red-400 rounded-box'>
                             <Link href="/linear/cramersrule">Cramer's Rule</Link>
                         </li>
-                        <li className='hover:bg-red-400 bg-red-500 text-white rounded-box'>
+                        <li className='hover:bg-red-400  bg-red-500 text-white rounded-box'>
                             <Link href="/linear/guasselimination">Guass Elimination</Link>
                         </li>
                         <li className='hover:bg-red-400 rounded-box'>
@@ -96,13 +171,10 @@ const Gusseli = () => {
                             <Link href="/linear/matrixinvertion">Matrix Inversion</Link>
                         </li>
                         <li className='hover:bg-red-400 rounded-box'>
-                            <Link href="/linear/ludecomposition">LU decomposition</Link>
-                        </li>
-                        <li className='hover:bg-red-400 rounded-box'>
                             <Link href="/linear/jacobiiteration">Jacobi Interation</Link>
                         </li>
                         <li className='hover:bg-red-400 rounded-box'>
-                            <Link href="/linear/conjugate">Conjugate Gradiant</Link>
+                            <Link href="/linear/guassseidel">Guass-Seidel</Link>
                         </li>
                     </ul>
                 </div>
@@ -124,6 +196,7 @@ const Gusseli = () => {
                                 >
                                     Calculate
                                 </button>
+                                <button className="calculatebutton btn mt-[15%] ml-[1rem] w-[100%] text-[1rem] text-white" onClick={Random}>Random</button>
                             </div>
                         </div>
                         <hr className='border-red-400 w-full mt-6 opacity-100 mb-4' />
@@ -139,9 +212,9 @@ const Gusseli = () => {
                                                 <input
                                                     key={colIndex}
                                                     type="number"
-                                                    placeholder="0"
-                                                    onChange={(e) => updateMatrixA(rowIndex, colIndex, e.target.value)}
-                                                    className="input input-bordered text-center m-1 w-20"
+                                                    value={value}
+                                                    onChange={(e) => changematrixasize(rowIndex, colIndex, e.target.value)}
+                                                    className="input input-bordered text-center m-[3px] w-[5rem]"
                                                 />
                                             ))}
                                         </div>
@@ -181,9 +254,9 @@ const Gusseli = () => {
                                         <div key={rowIndex} className="flex flex-row items-center justify-center">
                                             <input
                                                 type="number"
-                                                placeholder="0"
-                                                onChange={(e) => updateMatrixB(rowIndex, e.target.value)}
-                                                className="input input-bordered text-center m-1 w-20"
+                                                value={matrixB[rowIndex]}
+                                                onChange={(e) => changematrixbsize(rowIndex, e.target.value)}
+                                                className="input input-bordered text-center m-[3px] w-[5rem]"
                                             />
                                         </div>
                                     ))}

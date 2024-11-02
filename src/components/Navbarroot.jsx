@@ -17,9 +17,8 @@ function NavBarRoot() {
                 <li><Link href="/root/graphicalmethod">Root of Equation</Link></li>
                 <li><Link href="/linear/cramersrule">Linear Algebra Equeation</Link></li>
                 <li><Link href="/interpolation/newtondivided">Interpolation</Link></li>
-                <li><a>Item 2</a></li>
-                <li><a>Item 2</a></li>
-                <li><a>Item 2</a></li>
+                <li><Link href="/extrapolation/lenearregression">Exterpolation</Link></li>
+                <li><Link href="/integrateanddiff/home">Integration & Differentiation</Link></li>
               </ul>
             </div>
           </div>

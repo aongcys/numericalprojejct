@@ -1,7 +1,7 @@
 import { evaluate } from 'mathjs';
 import React, { useState } from "react";
 import NavBarRoot from '@/components/Navbarroot';
-import FlooTer from '/src/components/Flooter';
+import FlooTer from '/src/components/flooter';
 import { MathJax } from 'better-react-mathjax';
 import { LineChart } from '@mui/x-charts/LineChart';
 import Link from 'next/link';
@@ -40,7 +40,7 @@ const Test = () => {
         }
         const evaluateFunc = (x) => evaluate(Equation, { x });
         const obj = [];
-        let xm, iteration = 1,error;
+        let xm, iteration = 1, error;
 
         for (let i = -10; i <= 10; i += 0.002) {
             ingraph.push({
@@ -68,7 +68,7 @@ const Test = () => {
 
             obj.push({
                 Iteration: iteration,
-                Y : y,
+                Y: y,
                 Xm: xm,
                 Error: error
             });
@@ -120,7 +120,7 @@ const Test = () => {
                             <div className='row-span-1'>
                                 <div className='mt-5 mr-20 h-[75%] bg-white rounded-box flex justify-center items-center shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]'>
                                     <MathJax className='text-[1.5rem]' inline dynamic>
-                                        {"`f(x): $`".replace("$", Equation ? Equation : "" )}
+                                        {"`f(x): $`".replace("$", Equation ? Equation : "")}
                                     </MathJax>
                                 </div>
                             </div>

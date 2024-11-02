@@ -6,14 +6,15 @@ import FlooTer from '/src/components/flooter'
 import Link from 'next/link'
 import NavBarLinear from '@/components/Navbarlinear'
 
-const Jacobi = () => {
+const Seidel = () => {
     const [size, setSize] = useState(2);
     const [matrixA, setMatrixA] = useState(Array(2).fill().map(() => Array(2).fill(0)));
     const [matrixB, setMatrixB] = useState(Array(2).fill(0));
     const [matrixX, setMatrixX] = useState(Array(2).fill(0));
     const [xinitial, setxinitial] = useState(0);
     const [ans, setcheck] = useState(null);
-    const [time, settime] = useState(0);
+    const [time, settime] = useState(null);
+
     const [checkidfunc, setcheckidfunc] = useState([]);
 
     useEffect(() => {
@@ -134,15 +135,18 @@ const Jacobi = () => {
 
         for (let i = 0; i < size; i++) {
             xold[i] = xinitial;
+            xnew[i] = xinitial;
         }
 
-        while (newerror > error && newerror !== error && interation < 100) {
+        while (newerror > error && newerror !== error) {
             newerror = 0;
             for (let i = 0; i < size; i++) {
                 let inrow = 0;
+                xold[i] = xnew[i];
+
                 for (let j = 0; j < size; j++) {
                     if (i !== j) {
-                        inrow += matrixA[i][j] * xold[j];
+                        inrow += matrixA[i][j] * xnew[j];
                     }
                 }
                 xnew[i] = (matrixB[i] - inrow) / matrixA[i][i];
@@ -152,16 +156,35 @@ const Jacobi = () => {
                 newerror += Math.abs(xnew[i] - xold[i]) / Math.abs(xnew[i]);
             }
 
+            interation++;
+        }
+
+        while (newerror > error) {
+            newerror = 0;
+
             for (let i = 0; i < size; i++) {
-                xold[i] = xnew[i];
+                let inrow = 0;
+
+                for (let j = 0; j < size; j++) {
+                    if (i !== j) {
+                        inrow += matrixA[i][j] * xnew[j]; // ใช้ xnew ที่อัพเดทไปเรื่อยๆ
+                    }
+                }
+
+                // คำนวณค่าใหม่สำหรับ xnew[i]
+                const oldXnew = xnew[i];
+                xnew[i] = (matrixB[i] - inrow) / matrixA[i][i];
+
+                // อัพเดทค่า error
+                newerror += Math.abs((xnew[i] - oldXnew) / xnew[i]);
             }
 
             interation++;
-            console.log(`Iteration ${interation}:`, xnew); // แสดงผลลัพธ์ในคอนโซล
         }
+
         settime(interation);
-        setMatrixX(xnew);
         setcheck(xnew[0]);
+        setMatrixX(xnew);
     };
 
     return (
@@ -182,10 +205,10 @@ const Jacobi = () => {
                         <li className='hover:bg-red-400 rounded-box'>
                             <Link href="/linear/matrixinvertion">Matrix Inversion</Link>
                         </li>
-                        <li className='hover:bg-red-400 bg-red-500 text-white rounded-box'>
+                        <li className='hover:bg-red-400 rounded-box'>
                             <Link href="/linear/jacobiiteration">Jacobi Interation</Link>
                         </li>
-                        <li className='hover:bg-red-400 rounded-box'>
+                        <li className='hover:bg-red-400  bg-red-500 text-white rounded-box'>
                             <Link href="/linear/guassseidel">Guass-Seidel</Link>
                         </li>
                     </ul>
@@ -289,5 +312,5 @@ const Jacobi = () => {
     );
 }
 
-export default Jacobi
+export default Seidel
 
